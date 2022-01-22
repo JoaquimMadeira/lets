@@ -35,8 +35,8 @@ const Admin: NextPage = () => {
         </h1>
 
         <p className={styles.description}>
-          Get started by picking a {' '}
-          <code className={styles.code}>use case</code>
+          Listing of all{' '}
+          <code className={styles.code}>movie sessions</code>
         </p>
 
         <table className="table">

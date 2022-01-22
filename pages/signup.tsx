@@ -21,8 +21,7 @@ const timeList = Array.from({length: 24}, (_, i) => (i < 10 ? '0' : '') + i + ':
 const rowsList = Array.from({length: 10}, (_, i) => i + 1)
 const seatsList = Array.from({length: 10}, (_, i) => i + 1)
 
-const Signup: NextPage = () => {
-  const [formData, setFormData] = useState({
+const defaultFormData = {
     firstname: '',
     lastname: '',
     email: '',
@@ -32,18 +31,23 @@ const Signup: NextPage = () => {
     time: '',
     row: '',
     seat: ''
-  })
+};
+
+const Signup: NextPage = () => {
+  const [formData, setFormData] = useState(defaultFormData)
   
   const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     let aux:Array<Object> = [];
     // Parse the serialized data back into an aray of objects
-    aux = JSON.parse(localStorage.getItem('movieSessions') || '{}') || [];
+    aux = JSON.parse(localStorage.getItem('movieSessions') || '[]') || [];
     // Push the new data (whether it be an object or anything else) onto the array
     aux.push(formData);
     // Re-serialize the array back into a string and store it in localStorage
     localStorage.setItem('movieSessions', JSON.stringify(aux));
+
+    setFormData(defaultFormData);
   }
 
   return (
@@ -59,11 +63,6 @@ const Signup: NextPage = () => {
          Welcome to <Link href="/"><a>Let&apos;s Movie Session!</a></Link>
         </h1>
 
-        <p className={styles.description}>
-          Get started by picking a {' '}
-          <code className={styles.code}>use case</code>
-        </p>
-
         <div className={styles['signup-form']}>
             <form onSubmit={handleSubmit}>
                 <h2>Sign Up</h2>
@@ -71,40 +70,34 @@ const Signup: NextPage = () => {
                 <hr />
                 <div className={styles['form-group']}>
                     <div className={styles['input-group']}>
-                        <span className={styles['input-group-addon']}><i className="fa fa-user"></i></span>
-                        <input type="text" className="form-control" name="firstname" placeholder="First name" value={formData.firstname} onChange={(e) => setFormData({...formData, firstname: e.target.value})} required={true} />
+                        <input type="text" className="form-control" name="firstname" placeholder="First name" value={formData.firstname} data-testid="firstname" onChange={(e) => setFormData({...formData, firstname: e.target.value})} required={true} />
                     </div>
                 </div>
                 <div className={styles['form-group']}>
                     <div className={styles['input-group']}>
-                        <span className={styles['input-group-addon']}><i className="fa fa-paper-plane"></i></span>
-                        <input type="text" className="form-control" name="lastname" placeholder="Last name" value={formData.lastname} onChange={(e) => setFormData({...formData, lastname: e.target.value})} required={true} />
+                        <input type="text" className="form-control" name="lastname" placeholder="Last name" value={formData.lastname} data-testid="lastname" onChange={(e) => setFormData({...formData, lastname: e.target.value})} required={true} />
                     </div>
                 </div>
                 <div className={styles['form-group']}>
                     <div className={styles['input-group']}>
-                        <span className={styles['input-group-addon']}><i className="fa fa-paper-plane"></i></span>
-                        <input type="email" className="form-control" name="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} required={true} />
+                        <input type="email" className="form-control" name="email" placeholder="Email" value={formData.email} data-testid="email" onChange={(e) => setFormData({...formData, email: e.target.value})} required={true} />
                     </div>
                 </div>
                 <div className={styles['form-group']}>
                     <div className={styles['input-group']}>
-                        <span className={styles['input-group-addon']}><i className="fa fa-paper-plane"></i></span>
                         <span>Avatar: </span>
-                        <input id="avatar" name="avatar" type="file" value={formData.avatar} onChange={(e) => setFormData({...formData, avatar: e.target.value})} required={true} />
+                        <input id="avatar" name="avatar" type="file" value={formData.avatar} data-testid="avatar" onChange={(e) => setFormData({...formData, avatar: e.target.value})} required={true} />
                     </div>
                 </div>
                 <div className={styles['form-group']}>
                     <div className={styles['input-group']}>
-                        <span className={styles['input-group-addon']}><i className="fa fa-paper-plane"></i></span>
-                        <input type="text" className="form-control" name="phone" placeholder="Phone" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} required={true} />
+                        <input type="text" className="form-control" name="phone" placeholder="Phone" value={formData.phone} data-testid="phone" onChange={(e) => setFormData({...formData, phone: e.target.value})} required={true} />
                     </div>
                 </div>
                 <div className={styles['form-group']}>
                     <div className={styles['input-group']}>
-                        <span className={styles['input-group-addon']}><i className="fa fa-paper-plane"></i></span>
-                        <select className="form-select" aria-label="Select movie" value={formData.movie} onChange={(e) => setFormData({...formData, movie: e.target.value})}>
-                            <option selected>Select movie</option>
+                        <select className="form-select" aria-label="Select movie" value={formData.movie} data-testid="movie" onChange={(e) => setFormData({...formData, movie: e.target.value})}>
+                            <option value="">Select movie</option>
                             {movieList.map((item, i) => {
                                 return (<option key={'movieOption' + i} value={item.name}>{item.name}</option>)
                             })}
@@ -113,9 +106,8 @@ const Signup: NextPage = () => {
                 </div>
                 <div className={styles['form-group']}>
                     <div className={styles['input-group']}>
-                        <span className={styles['input-group-addon']}><i className="fa fa-paper-plane"></i></span>
-                        <select className="form-select" aria-label="Select time" value={formData.time} onChange={(e) => setFormData({...formData, time: e.target.value})}>
-                            <option selected>Select time</option>
+                        <select className="form-select" aria-label="Select time" value={formData.time} data-testid="time" onChange={(e) => setFormData({...formData, time: e.target.value})}>
+                            <option value="">Select time</option>
                             {timeList.map((item, i) => {
                                 return (<option key={'timeOption' + i} value={item}>{item}</option>)
                             })}
@@ -124,9 +116,8 @@ const Signup: NextPage = () => {
                 </div>
                 <div className={styles['form-group']}>
                     <div className={styles['input-group']}>
-                        <span className={styles['input-group-addon']}><i className="fa fa-paper-plane"></i></span>
-                        <select className="form-select" aria-label="Select row" value={formData.row} onChange={(e) => setFormData({...formData, row: e.target.value})}>
-                            <option selected>Select row</option>
+                        <select className="form-select" aria-label="Select row" value={formData.row} data-testid="row" onChange={(e) => setFormData({...formData, row: e.target.value})}>
+                            <option value="">Select row</option>
                             {rowsList.map((item, i) => {
                                 return (<option key={'rowOption' + i} value={item}>{item}</option>)
                             })}
@@ -135,9 +126,8 @@ const Signup: NextPage = () => {
                 </div>
                 <div className={styles['form-group']}>
                     <div className={styles['input-group']}>
-                        <span className={styles['input-group-addon']}><i className="fa fa-paper-plane"></i></span>
-                        <select className="form-select" aria-label="Select seat" value={formData.seat} onChange={(e) => setFormData({...formData, seat: e.target.value})}>
-                            <option defaultValue="Select seat">Select seat</option>
+                        <select className="form-select" aria-label="Select seat" value={formData.seat} data-testid="seat" onChange={(e) => setFormData({...formData, seat: e.target.value})}>
+                            <option value="">Select seat</option>
                             {seatsList.map((item, i) => {
                                 return (<option key={'seatOption' + i} value={item}>{item}</option>)
                             })}
@@ -148,7 +138,7 @@ const Signup: NextPage = () => {
                     <label className="checkbox-inline"><input type="checkbox" required={true} /> I accept the <a href="#">Terms of Use</a> &amp; <a href="#">Privacy Policy</a></label>
                 </div>
                 <div className={styles['form-group']}>
-                    <button type="submit" className="btn btn-primary btn-lg">Sign Up</button>
+                    <button type="submit"  data-testid="submitBtn"  className="btn btn-primary btn-lg">Sign Up</button>
                 </div>
             </form>
         </div>
