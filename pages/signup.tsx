@@ -2,6 +2,8 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useState } from 'react'
+import useLocalStorage from '../hooks/useLocalStorage'
+import MovieSession from '../interfaces/movieSession'
 import styles from '../styles/Signup.module.css'
 
 function capitalizeFirstLetter(string:String) {
@@ -35,17 +37,14 @@ const defaultFormData = {
 
 const Signup: NextPage = () => {
   const [formData, setFormData] = useState(defaultFormData)
+  const [movieSessions, setMovieSessions] = useLocalStorage('movieSessions', [])
   
   const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    let aux:Array<Object> = [];
-    // Parse the serialized data back into an aray of objects
-    aux = JSON.parse(localStorage.getItem('movieSessions') || '[]') || [];
-    // Push the new data (whether it be an object or anything else) onto the array
+    let aux:Array<MovieSession> = movieSessions;
     aux.push(formData);
-    // Re-serialize the array back into a string and store it in localStorage
-    localStorage.setItem('movieSessions', JSON.stringify(aux));
+    setMovieSessions(aux);
 
     setFormData(defaultFormData);
   }

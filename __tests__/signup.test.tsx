@@ -1,9 +1,10 @@
-import { render, fireEvent, getByTestId} from '@testing-library/react';
+import { render, fireEvent, getByTestId } from '@testing-library/react';
 import Signup from '@/pages/signup'
 
 describe('Signup', () => {
     it("Submitting a new movie sessions makes changes to localStorage value", () => {
         const { container, rerender } = render(<Signup />);
+        
         const firstnameInput = getByTestId(container, "firstname");
         const lastnameInput = getByTestId(container, "lastname");
         const emailInput = getByTestId(container, "email");
@@ -53,6 +54,6 @@ describe('Signup', () => {
         
         rerender(<Signup />);
         
-        expect(JSON.parse(window.localStorage.getItem("movieSessions"))).toStrictEqual(newMovieSessions);
+        expect(JSON.parse(localStorage.getItem("movieSessions"))).toStrictEqual(newMovieSessions);
     });
 })

@@ -1,25 +1,13 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
+import useLocalStorage from '../hooks/useLocalStorage'
+import MovieSession from '../interfaces/movieSession'
 import styles from '../styles/Admin.module.css'
 
 const Admin: NextPage = () => {
-  const [movieSessions, setMovieSessions] = useState([]);
-
-  const loadMovieSessions = () => {
-    var aux = [];
-    const lsMovieSessionsJSON = localStorage.getItem('movieSessions');
-
-    if (lsMovieSessionsJSON !== null) {
-      aux = JSON.parse(lsMovieSessionsJSON);
-      setMovieSessions(aux);
-    }
-  }
-
-  useEffect(() => {
-    loadMovieSessions();
-  }, [])
+  const [movieSessions, setMovieSessions] = useLocalStorage('movieSessions', []);
 
   return (
     <div className={styles.container}>
@@ -54,7 +42,7 @@ const Admin: NextPage = () => {
             </tr>
           </thead>
           <tbody>
-            {movieSessions && movieSessions.map((item, i) => {
+            {movieSessions && movieSessions.map((item:MovieSession, i:number) => {
               return( 
                 <tr key={'movieSession' + i}>
                   <th scope="row">{i+1}</th>
